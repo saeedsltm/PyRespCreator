@@ -1,0 +1,610 @@
+{
+  "AHRM": {
+    "sensor": [
+      "T36117",
+      "T39633",
+      "LS0130-Geobit"
+    ],
+    "sensorStartDate": [
+      "06/04/2010",
+      "11/09/2017",
+      "05/13/2019"
+    ],
+    "digitizer": [
+      "A1986"
+    ],
+    "digitizerStartDate": [
+      "06/04/2010"
+    ]
+  },
+  "ASAO": {
+    "sensor": [
+      "T3347"
+    ],
+    "sensorStartDate": [
+      "05/10/2004"
+    ],
+    "digitizer": [
+      "DB05",
+      "DB12",
+      "DB11",
+      "DB08"
+    ],
+    "digitizerStartDate": [
+      "05/10/2004",
+      "11/10/2004",
+      "01/04/2005",
+      "08/01/2005"
+    ]
+  },
+  "BJRD": {
+    "sensor": [
+      "T34366",
+      "H162(le-3D/20S)",
+      "R-SENSORS(653)",
+      "T39708"
+    ],
+    "sensorStartDate": [
+      "02/06/2008",
+      "05/01/2016",
+      "09/13/2016",
+      "04/23/2018"
+    ],
+    "digitizer": [
+      "DB11"
+    ],
+    "digitizerStartDate": [
+      "02/06/2008"
+    ]
+  },
+  "BNDS": {
+    "sensor": [
+      "T3N20"
+    ],
+    "sensorStartDate": [
+      "05/11/2004"
+    ],
+    "digitizer": [
+      "DB06",
+      "DB12",
+      "A1985",
+      "A1982",
+      "DB17",
+      "DB18",
+      "DB12",
+      "DB13"
+    ],
+    "digitizerStartDate": [
+      "05/11/2004",
+      "04/13/2007",
+      "12/21/2010",
+      "12/01/2011",
+      "09/28/2012",
+      "03/09/2013",
+      "02/04/2017",
+      "10/02/2019"
+    ]
+  },
+  "BSRN": {
+    "sensor": [
+      "T36092"
+    ],
+    "sensorStartDate": [
+      "10/09/2012"
+    ],
+    "digitizer": [
+      "DB14"
+    ],
+    "digitizerStartDate": [
+      "10/09/2012"
+    ]
+  },
+  "CHBR": {
+    "sensor": [
+      "T3360",
+      "T3361"
+    ],
+    "sensorStartDate": [
+      "10/24/2009",
+      "09/27/2018"
+    ],
+    "digitizer": [
+      "DB13",
+      "A1984",
+      "A1982",
+      "A1983"
+    ],
+    "digitizerStartDate": [
+      "10/24/2009",
+      "11/12/2010",
+      "07/27/2016",
+      "01/28/2020"
+    ]
+  },
+  "CHTH": {
+    "sensor": [
+      "T3368"
+    ],
+    "sensorStartDate": [
+      "10/03/2005"
+    ],
+    "digitizer": [
+      "DB04",
+      "DB02",
+      "A1981"
+    ],
+    "digitizerStartDate": [
+      "10/03/2005",
+      "10/15/2007",
+      "08/08/2011"
+    ]
+  },
+  "DAMV": {
+    "sensor": [
+      "T3367",
+      "T38997"
+    ],
+    "sensorStartDate": [
+      "06/02/2004",
+      "10/28/2015"
+    ],
+    "digitizer": [
+      "DB20",
+      "A1987"
+    ],
+    "digitizerStartDate": [
+      "06/02/2004",
+      "09/26/2020"
+    ]
+  },
+  "GHIR": {
+    "sensor": [
+      "T3345",
+      "T36126",
+      "T3346",
+      "LS16056-Geobit"
+    ],
+    "sensorStartDate": [
+      "05/12/2004",
+      "12/01/2015",
+      "09/24/2018",
+      "03/04/2019"
+    ],
+    "digitizer": [
+      "DB19",
+      "A1980",
+      "DB10",
+      "DB15"
+    ],
+    "digitizerStartDate": [
+      "05/12/2004",
+      "12/01/2015",
+      "11/01/2017",
+      "09/24/2018"
+    ]
+  },
+  "GHVR": {
+    "sensor": [
+      "T3N22"
+    ],
+    "sensorStartDate": [
+      "02/15/2007"
+    ],
+    "digitizer": [
+      "DE61"
+    ],
+    "digitizerStartDate": [
+      "02/15/2007"
+    ]
+  },
+  "GIDE": {
+    "sensor": [
+      "T3361",
+      "R-SENSORS(653)"
+    ],
+    "sensorStartDate": [
+      "05/23/2016",
+      "04/25/2018"
+    ],
+    "digitizer": [
+      "A1987",
+      "DB10"
+    ],
+    "digitizerStartDate": [
+      "05/23/2016",
+      "11/24/2019"
+    ]
+  },
+  "GRMI": {
+    "sensor": [
+      "T3350",
+      "T36124",
+      "T3346",
+      "T34366"
+    ],
+    "sensorStartDate": [
+      "09/10/2004",
+      "09/29/2007",
+      "01/01/2008",
+      "05/11/2017"
+    ],
+    "digitizer": [
+      "DB16"
+    ],
+    "digitizerStartDate": [
+      "09/10/2004"
+    ]
+  },
+  "ILAM": {
+    "sensor": [
+      "T3366",
+      "H159(le-3D/20S)",
+      "T36118",
+      "H186(le-3D/20S)"
+    ],
+    "sensorStartDate": [
+      "10/19/2016",
+      "03/07/2017",
+      "05/24/2017",
+      "01/23/2018"
+    ],
+    "digitizer": [
+      "A1983",
+      "DB15"
+    ],
+    "digitizerStartDate": [
+      "10/19/2016",
+      "04/28/2019"
+    ]
+  },
+  "KHMZ": {
+    "sensor": [
+      "T3369",
+      "H191(le-3D/20S)",
+      "T3369"
+    ],
+    "sensorStartDate": [
+      "01/12/2009",
+      "08/16/2016",
+      "08/12/2017"
+    ],
+    "digitizer": [
+      "DE48"
+    ],
+    "digitizerStartDate": [
+      "01/12/2009"
+    ]
+  },
+  "KRBR": {
+    "sensor": [
+      "T3366",
+      "T35840"
+    ],
+    "sensorStartDate": [
+      "08/23/2004",
+      "04/16/2012"
+    ],
+    "digitizer": [
+      "DB14",
+      "DB07"
+    ],
+    "digitizerStartDate": [
+      "08/23/2004",
+      "07/03/2007"
+    ]
+  },
+  "MAKU": {
+    "sensor": [
+      "T3358",
+      "T3348"
+    ],
+    "sensorStartDate": [
+      "04/14/2004",
+      "03/02/2021"
+    ],
+    "digitizer": [
+      "DB01",
+      "DB15",
+      "DB18"
+    ],
+    "digitizerStartDate": [
+      "04/14/2004",
+      "11/11/2007",
+      "05/12/2017"
+    ]
+  },
+  "MRVT": {
+    "sensor": [
+      "T3N16"
+    ],
+    "sensorStartDate": [
+      "04/11/2006"
+    ],
+    "digitizer": [
+      "DB11",
+      "DB18",
+      "DB06"
+    ],
+    "digitizerStartDate": [
+      "04/11/2006",
+      "06/07/2006",
+      "04/28/2010"
+    ]
+  },
+  "NASN": {
+    "sensor": [
+      "T3359"
+    ],
+    "sensorStartDate": [
+      "04/12/2004"
+    ],
+    "digitizer": [
+      "DB10",
+      "DB13",
+      "DB02"
+    ],
+    "digitizerStartDate": [
+      "04/12/2004",
+      "04/23/2012",
+      "08/25/2019"
+    ]
+  },
+  "RMKL": {
+    "sensor": [
+      "T3N09"
+    ],
+    "sensorStartDate": [
+      "01/01/2010"
+    ],
+    "digitizer": [
+      "DB05"
+    ],
+    "digitizerStartDate": [
+      "01/01/2010"
+    ]
+  },
+  "SARDASHT": {
+    "sensor": [
+      "H-191(le-3D/20S)"
+    ],
+    "sensorStartDate": [
+      "01/21/2018"
+    ],
+    "digitizer": [
+      "DE66",
+      "A1980",
+      "DB12"
+    ],
+    "digitizerStartDate": [
+      "01/21/2018",
+      "09/27/2018",
+      "09/17/2019"
+    ]
+  },
+  "SHGR": {
+    "sensor": [
+      "T3361"
+    ],
+    "sensorStartDate": [
+      "10/11/2002"
+    ],
+    "digitizer": [
+      "DB17",
+      "A1987"
+    ],
+    "digitizerStartDate": [
+      "10/11/2002",
+      "02/11/2011"
+    ]
+  },
+  "SHRO": {
+    "sensor": [
+      "T36118",
+      "T36089"
+    ],
+    "sensorStartDate": [
+      "02/04/2009",
+      "02/23/2015"
+    ],
+    "digitizer": [
+      "DE67"
+    ],
+    "digitizerStartDate": [
+      "02/04/2009"
+    ]
+  },
+  "SHRT": {
+    "sensor": [
+      "T34369"
+    ],
+    "sensorStartDate": [
+      "09/11/2008"
+    ],
+    "digitizer": [
+      "DB01"
+    ],
+    "digitizerStartDate": [
+      "09/11/2008"
+    ]
+  },
+  "SNGE": {
+    "sensor": [
+      "T3346",
+      "T38998"
+    ],
+    "sensorStartDate": [
+      "05/26/2004",
+      "06/05/2016"
+    ],
+    "digitizer": [
+      "DB18",
+      "DB07",
+      "DB08",
+      "DB07",
+      "DB15",
+      "DE66",
+      "A1982",
+      "DB02",
+      "DB17"
+    ],
+    "digitizerStartDate": [
+      "05/26/2004",
+      "01/15/2005",
+      "07/26/2005",
+      "08/01/2005",
+      "08/03/2006",
+      "03/03/2007",
+      "12/29/2013",
+      "06/05/2016",
+      "07/19/2018"
+    ]
+  },
+  "TABS": {
+    "sensor": [
+      "T3N09"
+    ],
+    "sensorStartDate": [
+      "09/10/2008"
+    ],
+    "digitizer": [
+      "DB05"
+    ],
+    "digitizerStartDate": [
+      "09/10/2008"
+    ]
+  },
+  "THKV": {
+    "sensor": [
+      "T3350",
+      "H155(le-3D/20S)"
+    ],
+    "sensorStartDate": [
+      "05/22/2004",
+      "05/01/2016"
+    ],
+    "digitizer": [
+      "DB09",
+      "DB13",
+      "DB14",
+      "DB18",
+      "A1983",
+      "DB19"
+    ],
+    "digitizerStartDate": [
+      "05/22/2004",
+      "11/08/2005",
+      "01/05/2008",
+      "06/16/2010",
+      "03/05/2013",
+      "01/02/2017"
+    ]
+  },
+  "YZKH": {
+    "sensor": [
+      "T36127"
+    ],
+    "sensorStartDate": [
+      "07/10/2012"
+    ],
+    "digitizer": [
+      "A1983",
+      "A1985"
+    ],
+    "digitizerStartDate": [
+      "07/10/2012",
+      "07/10/2012"
+    ]
+  },
+  "ZHSF": {
+    "sensor": [
+      "T3362"
+    ],
+    "sensorStartDate": [
+      "05/17/2004"
+    ],
+    "digitizer": [
+      "DB02",
+      "DE50"
+    ],
+    "digitizerStartDate": [
+      "05/17/2004",
+      "03/08/2007"
+    ]
+  },
+  "ZNJK": {
+    "sensor": [
+      "T3N18",
+      "T3345"
+    ],
+    "sensorStartDate": [
+      "09/11/2007",
+      "01/05/2021"
+    ],
+    "digitizer": [
+      "DB06",
+      "DE48",
+      "DB04"
+    ],
+    "digitizerStartDate": [
+      "09/11/2007",
+      "04/12/2008",
+      "07/14/2008"
+    ]
+  },
+  "KHRK": {
+    "sensor": [
+      "H-191(le-3D/20S)"
+    ],
+    "sensorStartDate": [
+      "02/10/2021"
+    ],
+    "digitizer": [
+      "A1952"
+    ],
+    "digitizerStartDate": [
+      "02/10/2021"
+    ]
+  },
+  "JSSH": {
+    "sensor": [
+      "T39646"
+    ],
+    "sensorStartDate": [
+      "09/18/2020"
+    ],
+    "digitizer": [
+      "DS20047"
+    ],
+    "digitizerStartDate": [
+      "09/18/2020"
+    ]
+  },
+  "ABGH": {
+    "sensor": [
+      "T39709"
+    ],
+    "sensorStartDate": [
+      "08/23/2020"
+    ],
+    "digitizer": [
+      "DB20"
+    ],
+    "digitizerStartDate": [
+      "08/23/2020"
+    ]
+  },
+  "KAGH": {
+    "sensor": [
+      "T39478"
+    ],
+    "sensorStartDate": [
+      "05/18/2020"
+    ],
+    "digitizer": [
+      "A1980"
+    ],
+    "digitizerStartDate": [
+      "05/18/2020"
+    ]
+  }
+}
