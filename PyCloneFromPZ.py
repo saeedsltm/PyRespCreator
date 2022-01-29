@@ -34,8 +34,10 @@ LogChanges:
 
 """
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # A helper function for makeing json file from dataless and use as input
+
+
 def dlsv2json():
     from obspy import read_inventory
     dlsv = input("\n+++ Dataless input file:\n")
@@ -62,42 +64,51 @@ def dlsv2json():
 "startTime" : "%s",
 "endTime" : "%s",
 "instrumentCode": "%s"
-},\n"""%(net.code,sta.code,lat,lon,elv,sd,ed,instrumentCode))
+},\n""" % (net.code, sta.code, lat, lon, elv, sd, ed, instrumentCode))
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Clear output directory if files exist.
+
+
 def clearOutput():
     if os.path.exists("output"):
         cmd = "rm -r output"
         os.system(cmd)
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # A helper function for making STATION0.HYP from dataless files
 # Parse dataless and into a simple dictionary
+
+
 def dlsv2dic(dlsv, dic):
     dlsv = read_inventory(dlsv)
     for net in dlsv:
         for sta in net:
             lat = ll.Latitude(sta.latitude)
             lon = ll.Longitude(sta.longitude)
-            dic.update({sta.code:(sta.code, lat, lon, sta.elevation)})
+            dic.update({sta.code: (sta.code, lat, lon, sta.elevation)})
     return dic
-# Read dataless 
+# Read dataless
+
+
 def dlsv2sta0():
     dic = {}
-    for net in list(filter(lambda x:x not in ['output/SCML', 'output/RESP'], glob(os.path.join("output", "*")))):
+    for net in list(filter(lambda x: x not in ['output/SCML', 'output/RESP'], glob(os.path.join("output", "*")))):
         for sta in sorted(glob(os.path.join(net, "*"))):
             for dlsv in glob(os.path.join(sta, "*.dlsv")):
                 dic = dlsv2dic(dlsv, dic)
     # Write station0.hyp
     with open("STATION0.HYP", "w") as f:
         for i in dic:
-            f.write("  %-4s%02d%05.2f%1s %02d%05.2f%1s%0004d\n"%(dic[i][0],
-                                                                 dic[i][1].degree, dic[i][1].decimal_minute, dic[i][1].get_hemisphere(),
-                                                                 dic[i][2].degree, dic[i][2].decimal_minute, dic[i][2].get_hemisphere(),
-                                                                 dic[i][3]))
+            f.write("  %-4s%02d%05.2f%1s %02d%05.2f%1s%0004d\n" % (dic[i][0],
+                                                                   dic[i][1].degree, dic[i][1].decimal_minute, dic[i][1].get_hemisphere(
+            ),
+                dic[i][2].degree, dic[i][2].decimal_minute, dic[i][2].get_hemisphere(
+            ),
+                dic[i][3]))
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 # make sure output directory is clear
 clearOutput()
 
@@ -107,23 +118,26 @@ with open("request.json") as f:
 
 # Make response file
 for request in requests["stations"]:
-    net,sta,seismometer,lat,lon,elv,st,et,ic = request.values()
+    net, sta, seismometer, lat, lon, elv, st, et, ic = request.values()
     # Results will be saved into
     saveDir = os.path.join("output", net, sta)
     Path(saveDir).mkdir(parents=True, exist_ok=True)
     # Working on
-    print("Net=%2s;Sta=%4s;Seismometer=%2s;Lat=%6.3f;Lon=%6.3f;Elv=%0004d;Start=%s;End=%s;Inst=%s"%(net,sta,seismometer,lat,lon,elv,st,et,ic))
+    print("Net=%2s;Sta=%4s;Seismometer=%2s;Lat=%6.3f;Lon=%6.3f;Elv=%0004d;Start=%s;End=%s;Inst=%s" % (
+        net, sta, seismometer, lat, lon, elv, st, et, ic))
     # Read sensor sensitivity in V/m/s
-    sensor_sensitivity = loadtxt(os.path.join("instruments", ic, "sensor_sensitivity.dat"))
+    sensor_sensitivity = loadtxt(os.path.join(
+        "instruments", ic, "sensor_sensitivity.dat"))
     # Read digitizer sensitivity in V/count which will be reversed to get count/V
-    digitizer_sensitivity = 1/loadtxt(os.path.join("instruments", ic, "digitizer_sensitivity.dat"))
+    digitizer_sensitivity = 1 / \
+        loadtxt(os.path.join("instruments", ic, "digitizer_sensitivity.dat"))
     # Read Normalization constant at 1Hz
     A0 = loadtxt(os.path.join("instruments", ic, "normalization_constant.dat"))
     # Read Poles in Hz
     poles = loadtxt(os.path.join("instruments", ic, "poles.dat"))
     # Read Zeros in Hz
     zeros = loadtxt(os.path.join("instruments", ic, "zeros.dat"))
-    ### Convert A0, Poles and Zeros from Hz to Rad/s
+    # Convert A0, Poles and Zeros from Hz to Rad/s
     A0_rad_s = A0*(2*pi)**(poles.size/2 - zeros.size/2)
     poles_rad_s = poles*(2*pi)
     zeros_rad_s = zeros*(2*pi)
@@ -139,8 +153,8 @@ for request in requests["stations"]:
         blk[50][0].longitude = lon
         blk[50][0].elevation = elv
         blk[50][0].start_effective_date = utc(st)
-        blk[50][0].end_effective_date = utc(et)        
-        blk[52][i].channel_identifier = "%s%s"%(seismometer, cha)
+        blk[50][0].end_effective_date = utc(et)
+        blk[52][i].channel_identifier = "%s%s" % (seismometer, cha)
         blk[52][i].location_identifier = ""
         blk[52][i].latitude = lat
         blk[52][i].longitude = lon
@@ -148,15 +162,17 @@ for request in requests["stations"]:
         blk[52][i].start_date = utc(st)
         blk[52][i].end_date = utc(et)
         blk[53][i].number_of_complex_poles = int(poles_rad_s.size / 2)
-        blk[53][i].real_pole = poles_rad_s[:,0].tolist()
-        blk[53][i].imaginary_pole = poles_rad_s[:,1].tolist()
-        blk[53][i].real_pole_error = zeros_like(poles_rad_s[:,0]).tolist()
-        blk[53][i].imaginary_pole_error = zeros_like(poles_rad_s[:,1]).tolist()
+        blk[53][i].real_pole = poles_rad_s[:, 0].tolist()
+        blk[53][i].imaginary_pole = poles_rad_s[:, 1].tolist()
+        blk[53][i].real_pole_error = zeros_like(poles_rad_s[:, 0]).tolist()
+        blk[53][i].imaginary_pole_error = zeros_like(
+            poles_rad_s[:, 1]).tolist()
         blk[53][i].number_of_complex_zeros = int(zeros_rad_s.size / 2)
-        blk[53][i].real_zero = zeros_rad_s[:,0].tolist()
-        blk[53][i].imaginary_zero = zeros_rad_s[:,1].tolist()
-        blk[53][i].real_zero_error = zeros_like(zeros_rad_s[:,0]).tolist()
-        blk[53][i].imaginary_zero_error = zeros_like(zeros_rad_s[:,1]).tolist()
+        blk[53][i].real_zero = zeros_rad_s[:, 0].tolist()
+        blk[53][i].imaginary_zero = zeros_rad_s[:, 1].tolist()
+        blk[53][i].real_zero_error = zeros_like(zeros_rad_s[:, 0]).tolist()
+        blk[53][i].imaginary_zero_error = zeros_like(
+            zeros_rad_s[:, 1]).tolist()
         blk[53][i].A0_normalization_factor = A0_rad_s
         blk[53][i].normalization_frequency = 1.0
         # stage sequence number 1, seismometer gain
@@ -164,24 +180,27 @@ for request in requests["stations"]:
         # stage sequence number 2, digitizer gain
         blk[58][i*mult+1].sensitivity_gain = digitizer_sensitivity[i]
         # stage sequence number 0, overall sensitivity
-        blk[58][(i+1)*mult-1].sensitivity_gain = sensor_sensitivity[i] * digitizer_sensitivity[i]
+        blk[58][(i+1)*mult-1].sensitivity_gain = sensor_sensitivity[i] * \
+            digitizer_sensitivity[i]
     # Save in dlsv format
-    outFile = os.path.join(saveDir, "%s.%s_%s.dlsv"%(net, sta, st.replace(",", "_")))
+    outFile = os.path.join(saveDir, "%s.%s_%s.dlsv" %
+                           (net, sta, st.replace(",", "_")))
     p.write_seed(outFile)
 
     # Uncomment the following line if you want to get RESP files
     RESPDir = os.path.join("output", "RESP")
     Path(RESPDir).mkdir(parents=True, exist_ok=True)
-    os.system("obspy-dataless2resp %s"%(outFile))
-    os.system("mv RESP* %s"%(RESPDir))
+    os.system("obspy-dataless2resp %s" % (outFile))
+    os.system("mv RESP* %s" % (RESPDir))
 
     # Uncomment the following line if you want to get SCML files
     SCMLDir = os.path.join("output", "SCML")
     Path(SCMLDir).mkdir(parents=True, exist_ok=True)
-    os.system("dlsv2inv %s %s"%(outFile, "%s.%s_%s.xml"%(net, sta, st.replace(",", "_"))))
-    os.system("mv *xml %s"%(SCMLDir))
+    os.system("dlsv2inv %s %s" % (outFile, "%s.%s_%s.xml" %
+              (net, sta, st.replace(",", "_"))))
+    os.system("mv *xml %s" % (SCMLDir))
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # # Utility, helper functions
 # dlsv2json()
 dlsv2sta0()
