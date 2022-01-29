@@ -3,6 +3,7 @@
 from obspy import UTCDateTime as utc
 from obspy.io.xseed import Parser
 from obspy import read_inventory
+from obspy.io.xseed.core import _parse_to_inventory_object as p2inv
 from LatLon import lat_lon as ll
 from numpy import array, pi, loadtxt, zeros_like
 from glob import glob
@@ -16,11 +17,11 @@ warnings.filterwarnings("ignore")
 Script for makeing response file from pole-zero files
 
 Inputs:
-- All requires info like poles, zeros, digitizer, sensivity and normalization
+- All requires info like poles, zeros, digitizer sensitivity and normalization
   constant should be placed in correct file name and instrument directtory.
 - Poles and zeros will be read in Hz.
-- Sensor sensivity will be read in V/m/s.
-- Digitizer sensivity will be read in V/count.
+- Sensor sensitivity will be read in V/m/s.
+- Digitizer sensitivity will be read in V/count.
 - Normalization constant will be read in Hz.
 - File "request.json" will be read for adding information for each station.
 
@@ -64,6 +65,13 @@ def dlsv2json():
 },\n"""%(net.code,sta.code,lat,lon,elv,sd,ed,instrumentCode))
 
 #-------------------------------------------------------------------------------
+# Clear output directory if files exist.
+def clearOutput():
+    if os.path.exists("output"):
+        cmd = "rm -r output"
+        os.system(cmd)
+
+#-------------------------------------------------------------------------------
 # A helper function for making STATION0.HYP from dataless files
 # Parse dataless and into a simple dictionary
 def dlsv2dic(dlsv, dic):
@@ -90,22 +98,25 @@ def dlsv2sta0():
                                                                  dic[i][3]))
 
 #-------------------------------------------------------------------------------
+# make sure output directory is clear
+clearOutput()
+
 # Read json input files
 with open("request.json") as f:
     requests = load(f)
 
 # Make response file
 for request in requests["stations"]:
-    net,sta,cha,lat,lon,elv,st,et,ic = request.values()
+    net,sta,seismometer,lat,lon,elv,st,et,ic = request.values()
     # Results will be saved into
     saveDir = os.path.join("output", net, sta)
     Path(saveDir).mkdir(parents=True, exist_ok=True)
     # Working on
-    print("Net=%2s;Sta=%4s;Lat=%6.3f;Lon=%6.3f;Elv=%0004d;Start=%s;End=%s;Inst=%s"%(net,sta,lat,lon,elv,st,et,ic))
-    # Read sensor sensivity in V/m/s
-    sensor_sensivity = loadtxt(os.path.join("instruments", ic, "sensor_sensivity.dat"))
-    # Read digitizer sensivity in V/count which will be reversed to get count/V
-    digitizer_sensivity = 1/loadtxt(os.path.join("instruments", ic, "digitizer_sensivity.dat"))
+    print("Net=%2s;Sta=%4s;Seismometer=%2s;Lat=%6.3f;Lon=%6.3f;Elv=%0004d;Start=%s;End=%s;Inst=%s"%(net,sta,seismometer,lat,lon,elv,st,et,ic))
+    # Read sensor sensitivity in V/m/s
+    sensor_sensitivity = loadtxt(os.path.join("instruments", ic, "sensor_sensitivity.dat"))
+    # Read digitizer sensitivity in V/count which will be reversed to get count/V
+    digitizer_sensitivity = 1/loadtxt(os.path.join("instruments", ic, "digitizer_sensitivity.dat"))
     # Read Normalization constant at 1Hz
     A0 = loadtxt(os.path.join("instruments", ic, "normalization_constant.dat"))
     # Read Poles in Hz
@@ -129,7 +140,7 @@ for request in requests["stations"]:
         blk[50][0].elevation = elv
         blk[50][0].start_effective_date = utc(st)
         blk[50][0].end_effective_date = utc(et)        
-        blk[52][i].channel_identifier = "BH%s" % cha
+        blk[52][i].channel_identifier = "%s%s"%(seismometer, cha)
         blk[52][i].location_identifier = ""
         blk[52][i].latitude = lat
         blk[52][i].longitude = lon
@@ -149,24 +160,25 @@ for request in requests["stations"]:
         blk[53][i].A0_normalization_factor = A0_rad_s
         blk[53][i].normalization_frequency = 1.0
         # stage sequence number 1, seismometer gain
-        blk[58][i*mult].sensitivity_gain = sensor_sensivity[i]
+        blk[58][i*mult].sensitivity_gain = sensor_sensitivity[i]
         # stage sequence number 2, digitizer gain
-        blk[58][i*mult+1].sensitivity_gain = digitizer_sensivity[i]
+        blk[58][i*mult+1].sensitivity_gain = digitizer_sensitivity[i]
         # stage sequence number 0, overall sensitivity
-        blk[58][(i+1)*mult-1].sensitivity_gain = sensor_sensivity[i] * digitizer_sensivity[i]
+        blk[58][(i+1)*mult-1].sensitivity_gain = sensor_sensitivity[i] * digitizer_sensitivity[i]
     # Save in dlsv format
-    p.write_seed(os.path.join(saveDir, "%s.%s.dlsv"%(net, sta)))
+    outFile = os.path.join(saveDir, "%s.%s_%s.dlsv"%(net, sta, st.replace(",", "_")))
+    p.write_seed(outFile)
 
     # Uncomment the following line if you want to get RESP files
     RESPDir = os.path.join("output", "RESP")
     Path(RESPDir).mkdir(parents=True, exist_ok=True)
-    os.system("obspy-dataless2resp %s"%(os.path.join(saveDir, "%s.%s.dlsv"%(net, sta))))
+    os.system("obspy-dataless2resp %s"%(outFile))
     os.system("mv RESP* %s"%(RESPDir))
 
     # Uncomment the following line if you want to get SCML files
     SCMLDir = os.path.join("output", "SCML")
     Path(SCMLDir).mkdir(parents=True, exist_ok=True)
-    os.system("dlsv2inv %s %s"%(os.path.join(saveDir, "%s.%s.dlsv"%(net, sta)), "%s.%s.xml"%(net, sta)))
+    os.system("dlsv2inv %s %s"%(outFile, "%s.%s_%s.xml"%(net, sta, st.replace(",", "_"))))
     os.system("mv *xml %s"%(SCMLDir))
 
 #-------------------------------------------------------------------------------

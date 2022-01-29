@@ -1,15 +1,15 @@
 #		<< obspy, Version 1.2.2 >>
 #		
 #		======== CHANNEL RESPONSE DATA ========
-B050F03     Station:     N16
+B050F03     Station:     ABAD
 B050F16     Network:     BP
 B052F03     Location:    ??
-B052F04     Channel:     BHE
-B052F22     Start date:  2020,001
+B052F04     Channel:     BNZ
+B052F22     Start date:  2021,329
 B052F23     End date:    2100,001
 #		=======================================
 #		+               +--------------------------------------------+                +
-#		+               |   Response (Poles & Zeros),   N16 ch BHE   |                +
+#		+               |   Response (Poles & Zeros),  ABAD ch BNZ   |                +
 #		+               +--------------------------------------------+                +
 #		
 B053F03     Transfer function type:                A [Laplace Transform (Rad/sec)]
@@ -32,7 +32,7 @@ B053F15-18    1 -2.200000E-01 -2.350000E-01  0.000000E+00  0.000000E+00
 B053F15-18    2 -2.300000E-01  0.000000E+00  0.000000E+00  0.000000E+00
 #		
 #		+                  +---------------------------------------+                  +
-#		+                  |       Channel Gain,   N16 ch BHE      |                  +
+#		+                  |       Channel Gain,  ABAD ch BNZ      |                  +
 #		+                  +---------------------------------------+                  +
 #		
 B058F03     Stage sequence number:                 1
@@ -41,7 +41,7 @@ B058F05     Frequency of gain:                     1.000000E+00 HZ
 B058F06     Number of calibrations:                0
 #		
 #		+                  +---------------------------------------+                  +
-#		+                  |       Channel Gain,   N16 ch BHE      |                  +
+#		+                  |       Channel Gain,  ABAD ch BNZ      |                  +
 #		+                  +---------------------------------------+                  +
 #		
 B058F03     Stage sequence number:                 2
@@ -50,7 +50,7 @@ B058F05     Frequency of gain:                     1.000000E+00 HZ
 B058F06     Number of calibrations:                0
 #		
 #		+               +-------------------------------------------+                 +
-#		+               |   Response (Coefficients),   N16 ch BHE   |                 +
+#		+               |   Response (Coefficients),  ABAD ch BNZ   |                 +
 #		+               +-------------------------------------------+                 +
 #		
 B054F03     Transfer function type:                D
@@ -64,7 +64,7 @@ B054F10     Number of denominators:                0
 B054F08-09    0  1.000000E+00  0.000000E+00
 #		
 #		+                      +------------------------------+                       +
-#		+                      |   Decimation,   N16 ch BHE   |                       +
+#		+                      |   Decimation,  ABAD ch BNZ   |                       +
 #		+                      +------------------------------+                       +
 #		
 B057F03     Stage sequence number:                 3
@@ -75,7 +75,7 @@ B057F07     Estimated delay (seconds):             0.000000E+00
 B057F08     Correction applied (seconds):          0.000000E+00
 #		
 #		+                  +---------------------------------------+                  +
-#		+                  |       Channel Gain,   N16 ch BHE      |                  +
+#		+                  |       Channel Gain,  ABAD ch BNZ      |                  +
 #		+                  +---------------------------------------+                  +
 #		
 B058F03     Stage sequence number:                 3
@@ -84,7 +84,7 @@ B058F05     Frequency of gain:                     1.000000E+00 HZ
 B058F06     Number of calibrations:                0
 #		
 #		+                  +---------------------------------------+                  +
-#		+                  |   Channel Sensitivity,   N16 ch BHE   |                  +
+#		+                  |   Channel Sensitivity,  ABAD ch BNZ   |                  +
 #		+                  +---------------------------------------+                  +
 #		
 B058F03     Stage sequence number:                 0

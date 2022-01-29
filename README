@@ -1,0 +1,8 @@
+1- Create a new folder in "instruments" directory, then put pole, zero and other required info into the same files names in created folder.
+2- Update "request.json" file according to your new station info.
+3- Run the "PyCloneFromPZ.py" script to make new RESPONSE files.
+
+Note:
+- Inside "PyCloneFromPZ.py" script file, there are two helper functions for creating "request.json" (dlsv2json) and "STATION0.HYP" (dlsv2sta0) from dataless files.
+- The output RESPONSE files will be stored in dataless format, if you need to have RESP format file too, you need to uncomment the lines "163-166" from "PyCloneFromPZ.py" script file.
+- If you need to have SCML RESPONSE format, uncomment the lines "169-172" from "PyCloneFromPZ.py" script file.
