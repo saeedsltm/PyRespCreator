@@ -14,11 +14,11 @@ import warnings
 warnings.filterwarnings("ignore")
 
 """
-Script for makeing response file from pole-zero files
+Script for making response file from pole-zero files
 
 Inputs:
 - All requires info like poles, zeros, digitizer sensitivity and normalization
-  constant should be placed in correct file name and instrument directtory.
+  constant should be placed in correct file name and instrument directory.
 - Poles and zeros will be read in Hz.
 - Sensor sensitivity will be read in V/m/s.
 - Digitizer sensitivity will be read in V/count.
@@ -35,7 +35,7 @@ LogChanges:
 """
 
 # -------------------------------------------------------------------------------
-# A helper function for makeing json file from dataless and use as input
+# A helper function for making json file from dataless and use as input
 
 
 def dlsv2json():
