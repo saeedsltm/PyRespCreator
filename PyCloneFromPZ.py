@@ -45,29 +45,32 @@ def dlsv2json():
     from obspy import read_inventory
     dlsv = input("\n+++ Dataless input file:\n")
     instrumentCode = input("+++ instrumentCode:\n")
-    dlsv = read_inventory("BP.dlsv")
-    with open("request.json", "w")as f:
-        for net in dlsv:
-            for sta in net:
-                lon = sta.longitude
-                lat = sta.latitude
-                elv = sta.elevation
-                sd = sta.start_date.strftime("%Y,%j")
-                try:
-                    ed = sta.end_date.strftime("%Y,%j")
-                except TypeError:
-                    ed = "2100,001"
-                f.write("""{
-"network" : "%s",
-"station" : "%s",
-"channel" : "BH",
-"latitude" : %6.3f,
-"longitude" : %6.3f,
-"elevation" : %d,
-"startTime" : "%s",
-"endTime" : "%s",
-"instrumentCode": "%s"
-},\n""" % (net.code, sta.code, lat, lon, elv, sd, ed, instrumentCode))
+    dlsv = read_inventory(dlsv)
+    stationsDict = {"stations": []}
+    for net in dlsv:
+        for sta in net:
+            lon = sta.longitude
+            lat = sta.latitude
+            elv = sta.elevation
+            sd = sta.start_date if sta.start_date else utc("2000-01-01")
+            ed = sta.end_date if sta.end_date else utc("2100-01-01")
+            for chn in sta:
+                channel = chn.code[:-1]
+            d = {
+                "network": f"{net.code}",
+                "station": f"{sta.code}",
+                "channel": f"{channel}",
+                "latitude": lat,
+                "longitude": lon,
+                "elevation": elv,
+                "startTime": f'{sd.strftime("%Y-%m-%d")}',
+                "endTime": f'{ed.strftime("%Y-%m-%d")}',
+                "instrumentCode": f"{instrumentCode}"
+            }
+            stationsDict["stations"].append(d)
+    json_object = dumps(stationsDict, indent=4)
+    with open("request.json", "w") as f:
+        f.write(json_object)
 
 
 def instruments2json():
@@ -108,7 +111,7 @@ def instruments2json():
                 "startTime": sdate.strftime("%Y-%m-%d"),
                 "endTime": edate.strftime("%Y-%m-%d"),
                 "instrumentCode": "%s/%s" % (staCode, sdate.strftime("%d%b%Y"))
-                }
+            }
             stationsDict["stations"].append(stationDict)
             if i+2 == len(dates):
                 break
