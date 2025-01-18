@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 import warnings
 from glob import glob
-from json import load, dumps
+from json import load
 from pathlib import Path
 
 import latlon as ll
@@ -20,7 +19,7 @@ Script for making response file from pole-zero files
 
 Inputs:
 - All requires info like poles, zeros, digitizer sensitivity and normalization
-  constant should be placed in a correct file name and instrument directory.
+  constant should be placed in a correct file and format.
 - Poles and zeros will be read in Hz.
 - Sensor sensitivity will be read in V/m/s.
 - Digitizer sensitivity will be read in V/count.
@@ -29,13 +28,14 @@ Inputs:
   station.
 
 Outputs:
-- For each network, station a directory will be created in "output" folder.
+- For each network-station a directory will be created in "output" folder.
 
 LogChanges:
 2021-05-05 > Initiated.
 2021-05-06 > Added two helper functions for creating "request.json" and
              "STATION0.HYP".
-2022-08-25 > user will be asked for using helper function.
+2022-08-25 > The user will be asked for using helper function.
+2025-01-16 > All inputs will be obtained from DB (sensor & digitizer)
 """
 
 
@@ -44,83 +44,30 @@ def dlsv2json():
     """
     from obspy import read_inventory
     dlsv = input("\n+++ Dataless input file:\n")
-    instrumentCode = input("+++ instrumentCode:\n")
-    dlsv = read_inventory(dlsv)
-    stationsDict = {"stations": []}
-    for net in dlsv:
-        for sta in net:
-            lon = sta.longitude
-            lat = sta.latitude
-            elv = sta.elevation
-            sd = sta.start_date if sta.start_date else utc("2000-01-01")
-            ed = sta.end_date if sta.end_date else utc("2100-01-01")
-            for chn in sta:
-                channel = chn.code[:-1]
-            d = {
-                "network": f"{net.code}",
-                "station": f"{sta.code}",
-                "channel": f"{channel}",
-                "latitude": lat,
-                "longitude": lon,
-                "elevation": elv,
-                "startTime": f'{sd.strftime("%Y-%m-%d")}',
-                "endTime": f'{ed.strftime("%Y-%m-%d")}',
-                "instrumentCode": f"{instrumentCode}"
-            }
-            stationsDict["stations"].append(d)
-    json_object = dumps(stationsDict, indent=4)
-    with open("request.json", "w") as f:
-        f.write(json_object)
-
-
-def instruments2json():
-    if not os.path.exists("stations.dat"):
-        print("file 'stations.dat' [net sta lon lat elv] not found!")
-        sys.exit()
-    stationsCoordinate = []
-    with open("stations.dat") as f:
-        for line in f:
-            stationsCoordinate.append(line.split())
-
-    stationsDict = {"stations": []}
-    for station in sorted(glob("instruments/*")):
-        dates = []
-        for date in sorted(
-                glob("%s/*" % station),
-                key=lambda x: utc.strptime(x.split(os.sep)[-1], "%d%b%Y")):
-            staCode = station.split(os.sep)[-1]
-            d = utc.strptime(date.split(os.sep)[-1], "%d%b%Y")
-            dates.append(d)
-        dates.append(utc(2100, 1, 1))
-        for i, date in enumerate(dates):
-            sdate = date
-            edate = dates[i+1]
-            lat = [float(_[3]) for _ in stationsCoordinate
-                   if _[1] == staCode][0]
-            lon = [float(_[2]) for _ in stationsCoordinate
-                   if _[1] == staCode][0]
-            elv = [float(_[4]) for _ in stationsCoordinate
-                   if _[1] == staCode][0]
-            stationDict = {
-                "network": "BI",
-                "station": staCode,
-                "channel": "SH",
-                "latitude": lat,
-                "longitude": lon,
-                "elevation": elv,
-                "startTime": sdate.strftime("%Y-%m-%d"),
-                "endTime": edate.strftime("%Y-%m-%d"),
-                "instrumentCode": "%s/%s" % (staCode, sdate.strftime("%d%b%Y"))
-            }
-            stationsDict["stations"].append(stationDict)
-            if i+2 == len(dates):
-                break
-
-    json_object = dumps(stationsDict, indent=4)
-    with open("request.json", "w") as f:
-        f.write(json_object)
-    print("\n%d objects converted and prepared in `request.json` file." %
-          len(stationsDict["stations"]))
+    dlsv = read_inventory("BP.dlsv")
+    with open("request.json", "w")as f:
+        for net in dlsv:
+            for sta in net:
+                lon = sta.longitude
+                lat = sta.latitude
+                elv = sta.elevation
+                sd = sta.start_date.strftime("%Y,%j")
+                try:
+                    ed = sta.end_date.strftime("%Y,%j")
+                except TypeError:
+                    ed = "2100,001"
+                f.write("""{
+"network" : "%s",
+"station" : "%s",
+"channel" : "BH",
+"latitude" : %6.3f,
+"longitude" : %6.3f,
+"elevation" : %d,
+"startTime" : "%s",
+"endTime" : "%s",
+"sensor": "",
+"digitizer": ""
+},\n""" % (net.code, sta.code, lat, lon, elv, sd, ed))
 
 
 def clearOutput():
@@ -184,29 +131,28 @@ def cloneFromPZ():
         requests = load(f)
     oldRESPFiles = []
     for request in requests["stations"]:
-        net, sta, seismometer, lat, lon, elv, st, et, ic = request.values()
+        net, sta, chn, lat, lon, elv, st, et, sn, dg = request.values()
         # Results will be saved into
         saveDir = os.path.join("output", "DataLess", net, sta)
         Path(saveDir).mkdir(parents=True, exist_ok=True)
         # Working on
-        msg = "Net=%2s;Sta=%4s;Seismometer=%2s;Lat=%6.3f;Lon=%6.3f;Elv=%0004d;\
-            Start=%s;End=%s;Inst=%s"
+        msg = "Net=%2s;Sta=%4s;Chn=%2s;Lat=%6.3f;Lon=%6.3f;Elv=%0004d;Start=%s;End=%s;Sensor=%s;Digitizer=%s"
         print(msg % (
-            net, sta, seismometer, lat, lon, elv, st, et, ic))
+            net, sta, chn, lat, lon, elv, st, et, sn, dg))
         # Read sensor sensitivity in V/m/s
         sensor_sensitivity = loadJson(os.path.join(
-            "instruments", ic, "sensor_sensitivity.json"))
+            "DB", "Sensor", sn, "sensor_sensitivity.json"))
         # Read digitizer sensitivity in V/count which will be reversed
         # to get count/V
         digitizer_sensitivity = loadJson(os.path.join(
-            "instruments", ic, "digitizer_sensitivity.json"))
+            "DB", "Digitizer", dg, "digitizer_sensitivity.json"))
         # Read Normalization constant at 1Hz
-        A0 = loadJson(os.path.join("instruments", ic,
+        A0 = loadJson(os.path.join("DB", "Digitizer", dg,
                                    "normalization_constant.json"))
         # Read Poles in Hz
-        poles = loadJson(os.path.join("instruments", ic, "poles.json"))
+        poles = loadJson(os.path.join("DB", "Sensor", sn, "poles.json"))
         # Read Zeros in Hz
-        zeros = loadJson(os.path.join("instruments", ic, "zeros.json"))
+        zeros = loadJson(os.path.join("DB", "Sensor", sn, "zeros.json"))
         # Read RESP template file for Z,N,E channels
         p = Parser(os.path.join("template", "generic.dlsv"))
         blk = p.blockettes
@@ -226,7 +172,7 @@ def cloneFromPZ():
             blk[50][0].elevation = elv
             blk[50][0].start_effective_date = utc(st)
             blk[50][0].end_effective_date = utc(et)
-            blk[52][i].channel_identifier = "%s%s" % (seismometer, cha)
+            blk[52][i].channel_identifier = "%s%s" % (chn, cha)
             blk[52][i].location_identifier = ""
             blk[52][i].latitude = lat
             blk[52][i].longitude = lon
@@ -249,7 +195,7 @@ def cloneFromPZ():
                 zeros[cha]["Img"]).tolist()
             blk[53][i].A0_normalization_factor = A0[cha]
             blk[53][i].normalization_frequency = 1.0
-            # stage sequence number 1, seismometer gain
+            # stage sequence number 1, chn gain
             blk[58][i*mult].sensitivity_gain = sensor_sensitivity[cha]
             # stage sequence number 2, digitizer gain
             blk[58][i*mult+1].sensitivity_gain = 1/digitizer_sensitivity[cha]
@@ -279,7 +225,7 @@ def cloneFromPZ():
         # Uncomment the following line if you want to get SCML files
         SCMLDir = os.path.join("output", "SCML")
         Path(SCMLDir).mkdir(parents=True, exist_ok=True)
-        os.system("dlsv2inv %s %s" % (outFile, "%s.%s_%s.xml" %
+        os.system("dlsv2inv %s %s >/dev/null 2>/dev/null" % (outFile, "%s.%s_%s.xml" %
                                       (net, sta, st.replace(",", "_"))))
         os.system("mv *xml %s" % (SCMLDir))
         for _ in newRESPFiles:
@@ -289,8 +235,7 @@ def cloneFromPZ():
 
 # GO!
 msg = "\n+++ Mode?\n1- Start cloning from PZ files,\n2- Convert DataLess to \
-'STATION0.HYP',\n3- Convert DataLess to 'request.json' file, \n4- Make \
-'request.json' useing information fetched from 'instruments' folder.\n"
+'STATION0.HYP',\n3- Convert DataLess to 'request.json' file.\n"
 mode = input(msg)
 if mode == "1":
     cloneFromPZ()
@@ -298,7 +243,5 @@ elif mode == "2":
     dlsv2sta0()
 elif mode == "3":
     dlsv2json()
-elif mode == "4":
-    instruments2json()
 else:
     print("Wrong choice, Bye!")
